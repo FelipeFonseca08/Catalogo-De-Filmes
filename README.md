@@ -1,2 +1,2 @@
-# Catalogo-De-Filmes
-Exibição dos melhores filmes, sinopses e trailer
+# Catalogo-de-FIlmes
+O Catalogo MARVEL de Filmes!

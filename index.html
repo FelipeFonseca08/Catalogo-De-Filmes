@@ -1,104 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Filmes</title>
+    <title>Catálogo de Filmes - Fase 1: Cadastro Manual (DOM Básico)</title>
+
+    <link rel="stylesheet" href="style.css">
+
 </head>
 <body>
 
-    <h1>Filmes</h1>
+    <h1>Catálogo de Filmes</h1>
+   
+    <form id="cadastro-filme">
+        <h2>Adicionar Novo Filme</h2>
 
-    <br>
+        <div>
+            <label for="titulo">Título do Filme:</label>
+            <input type="text" id="titulo">
+        </div>
 
-    <h2>1.Tropa de Elite</h2>
-    <p>Nascimento, capitão da tropa de elite do Rio de Janeiro, é escolhido para chefiar uma das equipes cuja missão é apaziguar o Morro do Turano. Ele precisa cumprir as ordens enquanto procura por um substituto para ficar em seu lugar. Em meio a um tiroteio, Nascimento e sua equipe resgatam Neto e Matias, dois aspirantes a oficiais da PM. Ansiosos para entrar em ação, os dois se candidatam ao curso de formação do Batalhão de Operações Policiais Especiais.</p>
-    <img src="" alt="">
-    <video src=""></video>
-    <br>
+        <div>
+            <label for="sinopse">Sinopse:</label>
+            <textarea id="sinopse" required></textarea>
+        </div>
 
-    <h2>2.Carros</h2>
-    <p>Ao viajar para a Califórnia, o famoso carro de corridas Relâmpago McQueen se perde e vai parar em Radiator Springs, uma cidadezinha na Rota 66. Ele conhece novos amigos e aprende lições que mudam sua forma de encarar a vida.</p>
-    <img src="" alt="">
-    <video src=""></video>
-    <br>
+        <button type="submit">Adicionar Filme</button>
+    </form>
 
-    <h2>3.</h2>
-    <p></p>
-    <img src="" alt="">
-    <video src=""></video>
-    <br>
+    <hr>
 
-    <h2>4.</h2>
-    <p></p>
-    <img src="" alt="">
-    <video src=""></video>
-    <br>
+    <div id="lista-filmes">
+        <p>Nenhum filme cadastrado ainda.</p>
+    </div>
 
-    <h2>5.</h2>
-    <p></p>
-    <img src="" alt="">
-    <video src=""></video>
-    <br>
+    <script src="script.js"></script>
 
-    <h2>6.</h2>
-    <p></p>
-    <img src="" alt="">
-    <video src=""></video>
-    <br>
-
-    <h2>7.</h2>
-    <p></p>
-    <img src="" alt="">
-    <video src=""></video>
-    <br>
-
-    <h2>8.</h2>
-    <p></p>
-    <img src="" alt="">
-    <video src=""></video>
-    <br>
-
-    <h2>9.</h2>
-    <p></p>
-    <img src="" alt="">
-    <video src=""></video>
-    <br>
-
-    <h2>10.</h2>
-    <p></p>
-    <img src="" alt="">
-    <video src=""></video>
-    <br>
-
-    <h2>11.</h2>
-    <p></p>
-    <img src="" alt="">
-    <video src=""></video>
-    <br>
-
-    <h2>12.</h2>
-    <p></p>
-    <img src="" alt="">
-    <video src=""></video>
-    <br>
-
-    <h2>13.</h2>
-    <p></p>
-    <img src="" alt="">
-    <video src=""></video>
-    <br>
-
-    <h2>14.</h2>
-    <p></p>
-    <img src="" alt="">
-    <video src=""></video>
-    <br>
-
-    <h2>15.</h2>
-    <p></p>
-    <img src="" alt="">
-    <video src=""></video>
-    <br>
 </body>
 </html>
