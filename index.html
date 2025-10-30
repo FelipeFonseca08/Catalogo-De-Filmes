@@ -4,7 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catálogo de Filmes Fase 2: Consumo de API</title>
-    <link rel="stylesheet" href="v2.0/style.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Estilos básicos para o exemplo funcionar melhor */
+        body { font-family: sans-serif; padding: 20px; }
+        .filme-item { display: flex; border: 1px solid #ccc; margin-bottom: 15px; padding: 10px; align-items: flex-start; }
+        .filme-poster { width: 100px; height: 150px; margin-right: 15px; object-fit: cover; }
+        .filme-info { flex-grow: 1; }
+        .filme-info h3 { margin-top: 0; }
+        .btn-remover, .btn-trailer { margin-top: 10px; margin-right: 5px; padding: 5px 10px; cursor: pointer; border: none; border-radius: 4px; }
+        .btn-remover { background-color: #f44336; color: white; }
+        .btn-trailer { background-color: #bb0000; color: white; text-decoration: none; display: inline-block; }
+    </style>
 </head>
 <body>
     <h1>Catálogo de Filmes</h1>
@@ -18,7 +29,7 @@
             <label for="sinopse">Sinopse:</label>
             <textarea id="sinopse" placeholder="Digite uma sinopse (opcional)"></textarea>
         </div>
-        <button type="submit">buscar e Adicionar Filme</button>
+        <button type="submit">Adicionar Filme</button>
     </form>
 
     <hr>
@@ -28,7 +39,8 @@
     </div>
 
     <script>
-        const API_KEY = 'f55f96f2';
+        // Use uma chave de API válida para testes. A chave "f55f96f2" geralmente funciona para exemplos.
+        const API_KEY = 'f55f96f2'; 
 
         // 1. ARMAZENAMENTO DE DADOS
         const catalogo = JSON.parse(localStorage.getItem('catalogoFilme')) || [];
@@ -52,8 +64,9 @@
             }
         }
 
-        function renderizarFilme(filme, indice) {
-            if (catalogo.length === 1 &&  listaFilmesContainer.querySelector('p')) {
+        function renderizarFilme(filme) {
+            // Remove a mensagem inicial se este for o primeiro filme a ser renderizado.
+            if (catalogo.length === 1 && listaFilmesContainer.querySelector('p')) {
                 listaFilmesContainer.innerHTML = '';
             }
 
@@ -63,7 +76,7 @@
             const imagemPoster = document.createElement('img');
             imagemPoster.src = filme.poster && filme.poster !== 'N/A'
                 ? filme.poster
-                : 'https://via.placeholder.com/100x150?text=Poster+Indisponível';
+                : 'https://via.placeholder.com/100x150?text=Poster+não+Disponível';
             imagemPoster.alt = `Poster do filme ${filme.titulo}`;
             imagemPoster.classList.add('filme-poster');
 
@@ -76,25 +89,27 @@
             const sinopseP = document.createElement('p');
             sinopseP.textContent = filme.sinopse || 'Sinopse não disponível.';
 
+            // NOVO: Link para o Trailer no YouTube (CORRIGIDO: Template String)
+            const termoBusca = encodeURIComponent(`${filme.titulo} trailer oficial`);
+            const trailerLink = document.createElement('a'); 
+            trailerLink.href = `https://www.youtube.com/results?search_query=${termoBusca}`; 
+            trailerLink.target = '_blank'; 
+            trailerLink.textContent = '▶️ Ver Trailer (YouTube)'; 
+            trailerLink.classList.add('btn-trailer'); 
+
             const removerBotao = document.createElement('button');
             removerBotao.textContent = 'Remover';
             removerBotao.classList.add('btn-remover');
 
-            // Link para o trailer no youtube
-            const trailerLink = document.createElement('a');
-            const termoBusca = encodeURIComponent(`${filme.titulo} trailer oficial`);
-            trailerLink.href = `https://www.youtube.com/results?search_query=${termoBusca}`;
-            trailerLink.target = '_blank';
-            trailerLink.textContent = 'Ver Trailer (Youtube)'; 
-            trailerLink.classList.add('btn-trailer'); 
-
             removerBotao.addEventListener('click', () => {
+                // Encontrar o índice do filme a ser removido de forma segura
                 const indiceAtual = catalogo.findIndex(f => f.titulo === filme.titulo);
                 if (indiceAtual > -1) removerFilme(indiceAtual, filmeDiv);
             });
 
             infoDiv.appendChild(tituloH3);
             infoDiv.appendChild(sinopseP);
+            infoDiv.appendChild(trailerLink);
             infoDiv.appendChild(removerBotao);
 
             filmeDiv.appendChild(imagemPoster);
@@ -109,7 +124,10 @@
             const titulo = tituloInput.value.trim();
             const sinopseManual = sinopseInput.value.trim();
 
-            if (!titulo) return;
+            if (!titulo) {
+                alert('Por favor, digite o título do filme.');
+                return;
+            }
 
             const url = `https://www.omdbapi.com/?apikey=${API_KEY}&t=${encodeURIComponent(titulo)}&lang=pt`;
 
@@ -118,26 +136,30 @@
                 const dadosdoFilme = await resposta.json();
 
                 if (dadosdoFilme.Response === "True") {
+                  
+                    // CORREÇÃO: Estrutura lógica para verificação de duplicidade.
                     if (catalogo.some(f => f.titulo === dadosdoFilme.Title)) {
-                        alert(`O filme "${dadosdoFilme.Title}" já está no seu catálogo.`);
+                        alert(`O filme "${dadosdoFilme.Title}" já está no seu catálogo.`); 
                         form.reset();
-                        return
+                        return; // Sai da função, não adiciona
                     }
 
                     const novoFilme = {
                         titulo: dadosdoFilme.Title,
-                        sinopse: dadosdoFilme.Plot || sinopseManual || 'Sinopse não disponível.',
+                        // Prioriza a sinopse manual, depois a da API, depois a padrão.
+                        sinopse: sinopseManual || dadosdoFilme.Plot || 'Sinopse não disponível.', 
                         poster: dadosdoFilme.Poster,
                     };
 
                     catalogo.push(novoFilme);
                     salvarCatalogo();
-                    renderizarFilme(novoFilme, catalogo.length - 1);
+                    renderizarFilme(novoFilme); // Não precisa passar o índice, o método usa o length.
+
                 } else {
                     alert(`Filme não encontrado na OMDB: "${titulo}".`);
                 }
             } catch (error) {
-                alert('Erro ao buscar filme na API.');
+                alert('Erro ao buscar filme na API. Verifique sua conexão ou chave de API.');
                 console.error('Erro:', error);
             }
 
@@ -146,8 +168,10 @@
 
         function carregarCatalogo() {
             if (catalogo.length > 0) {
-                listaFilmesContainer.innerHTML = '';
-                catalogo.forEach((filme, i) => renderizarFilme(filme, i));
+                // Esta linha não é estritamente necessária se a renderizarFilme for ajustada,
+                // mas garante a limpeza da mensagem inicial.
+                listaFilmesContainer.innerHTML = ''; 
+                catalogo.forEach(filme => renderizarFilme(filme));
             }
         }
 
