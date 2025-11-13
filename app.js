@@ -77,11 +77,39 @@ async function buscarFilmes(termo) {
     }
 }
 
+// --- C. Função para Buscar Detalhes e Trailer (Chamada Adicinal) ---
+// É NECESSÁRIA pois a OMDB não retorna o Rating na busca por 's'
+async function buscarDetalhes(imdbID) {
+    try {
+        // Busca na OMDB (O parâmetro 'i' é para buscar por 's')
+        const response = await fetch(`https://www.omdbapi.com/?i=${imdbID}&plot=full&apikey=${OMDB_API_KEY}`);
+        const data = await response.json();
+        return data.Response === 'True' ? data : null;
+    } catch (error) {
+        console.error("Erro ao buscaar detalhes:", error);
+        return null;
+    }
+}
 
+// --- D. Lógica para exibir Detalher/Trailer (Implementação do Modal) ---
+// Se você usava uma API diferente para Trailer, integre-a aqui.
+function buscarEExibirDetalhes(imdbID) {
+    // 1. Você faria uma nova busca (na OMDB ou em outra API como a TheMovieDB/Youtube)
+    //      para obter o link do trailer ou mais detalhes.
 
+    // 2. Você criaria um elemento de Modal (janela pop-up) com o trailer/detalhe.
 
+    alert(`Funcionalidade de Detalhes/Trailer para o ID: ${imdbID} (Ainda precisa ser implementada).`);
+    // Exemplo de como abrir um link se você tiver o URL do trailer:
+    // window.open('LINK_DO_TRAILER', '_blank');
+}
 
-
+// --- E. Implementação do DEBOUNCE na Busca ---
+// Isso evita chamar a API a cada tecla digitada.
+let searchTimeout;
+searchInput.addEventListener('input', (event) => {
+    // Limpa o timeout anteiror para evitar chamadas multiplas.
+})
 
 
 
